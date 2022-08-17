@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -23,12 +24,15 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID uuid) {
-        return Optional.empty();
+        return Optional.ofNullable(customerMapper
+                .customerToCustomerDto(customerRepository.findById(uuid).orElse(null)));
     }
 
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return null;
+        return customerRepository.findAll().stream()
+                .map(customerMapper::customerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
