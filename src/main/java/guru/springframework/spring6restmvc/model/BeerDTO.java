@@ -34,4 +34,5 @@ public class BeerDTO {
     private BigDecimal price;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
+
 }
