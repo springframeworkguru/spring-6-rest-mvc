@@ -1,0 +1,397 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8081
+  description: Generated server url
+paths:
+  /api/v1/customer/{customerId}:
+    get:
+      tags:
+      - customer-controller
+      operationId: getCustomerById
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CustomerDTO'
+    put:
+      tags:
+      - customer-controller
+      operationId: updateCustomerByID
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+      - customer-controller
+      operationId: deleteCustomerById
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    patch:
+      tags:
+      - customer-controller
+      operationId: patchCustomerById
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/beer/{beerId}:
+    get:
+      tags:
+      - beer-controller
+      operationId: getBeerById
+      parameters:
+      - name: beerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BeerDTO'
+    put:
+      tags:
+      - beer-controller
+      operationId: updateById
+      parameters:
+      - name: beerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+      - beer-controller
+      operationId: deleteById
+      parameters:
+      - name: beerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    patch:
+      tags:
+      - beer-controller
+      operationId: updateBeerPatchById
+      parameters:
+      - name: beerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/customer:
+    get:
+      tags:
+      - customer-controller
+      operationId: listAllCustomers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerDTO'
+    post:
+      tags:
+      - customer-controller
+      operationId: handlePost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/beer:
+    get:
+      tags:
+      - beer-controller
+      operationId: listBeers
+      parameters:
+      - name: beerName
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: beerStyle
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - LAGER
+          - PILSNER
+          - STOUT
+          - GOSE
+          - PORTER
+          - ALE
+          - WHEAT
+          - IPA
+          - PALE_ALE
+          - SAISON
+      - name: showInventory
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: pageNumber
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageBeerDTO'
+    post:
+      tags:
+      - beer-controller
+      operationId: handlePost_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeerDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    CustomerDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        version:
+          type: integer
+          format: int32
+        createdDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+    BeerDTO:
+      required:
+      - beerName
+      - beerStyle
+      - price
+      - upc
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: integer
+          format: int32
+        beerName:
+          type: string
+        beerStyle:
+          type: string
+          enum:
+          - LAGER
+          - PILSNER
+          - STOUT
+          - GOSE
+          - PORTER
+          - ALE
+          - WHEAT
+          - IPA
+          - PALE_ALE
+          - SAISON
+        upc:
+          type: string
+        quantityOnHand:
+          type: integer
+          format: int32
+        price:
+          type: number
+        createdDate:
+          type: string
+          format: date-time
+        updateDate:
+          type: string
+          format: date-time
+    PageBeerDTO:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/BeerDTO'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
