@@ -100,12 +100,21 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>springdoc</id>
+                        <goals>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build-info</id>
                         <goals>
                             <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
+                    <jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -113,6 +122,23 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <apiDocsUrl>http://localhost:8081/v3/api-docs.yaml</apiDocsUrl>
+                    <outputFileName>oa3.yml</outputFileName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
