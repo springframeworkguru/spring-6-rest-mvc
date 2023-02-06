@@ -57,7 +57,6 @@ class BeerControllerIT {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(springSecurity())
                 .build();
     }
 
@@ -188,8 +187,7 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.length()", is(1)))
                 .andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
-    }
+        System.out.println(result.getResponse().getContentAsString());   }
 
     @Test
     void testDeleteByIDNotFound() {
