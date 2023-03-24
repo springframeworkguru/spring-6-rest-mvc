@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static guru.springframework.spring6restmvc.model.BeerStyle.PALE_ALE;
 
@@ -60,6 +58,10 @@ public class BeerServiceImpl implements BeerService {
         beerMap.put(beer1.getId(), beer1);
         beerMap.put(beer2.getId(), beer2);
         beerMap.put(beer3.getId(), beer3);
+    }
+
+    public List<Beer> listBeers(){
+        return new ArrayList<>(beerMap.values());
     }
 
     @Override
