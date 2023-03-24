@@ -22,7 +22,7 @@ public class BeerController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Beer> handlePost(Beer beer){
+    public ResponseEntity<Beer> handlePost(@RequestBody Beer beer){
 
         Beer savedBeer = beerService.saveNewBeer(beer);
 

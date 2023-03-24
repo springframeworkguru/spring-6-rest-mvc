@@ -1,10 +1,11 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.model.Customer;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     private Map<UUID, Customer> customerMap;
