@@ -23,6 +23,7 @@ public class BeerController {
         return beerService.listBeers();
     }
 
+    @RequestMapping("/api/v1/beer/{beerId}")
     public Beer getBeerById(UUID id){
 
         log.debug("Get Beer by Id in Controller");
