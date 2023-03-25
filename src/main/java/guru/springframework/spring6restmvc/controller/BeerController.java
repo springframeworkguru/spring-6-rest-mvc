@@ -28,8 +28,9 @@ public class BeerController {
         Beer savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/beer/" +savedBeer.getId().toString());
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
    }
 
     @RequestMapping(method = RequestMethod.GET )
