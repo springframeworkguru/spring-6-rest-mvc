@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.services.BeerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
 public class BeerController {
@@ -34,9 +36,6 @@ public class BeerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    public BeerController(BeerService beerService) {
-        this.beerService = beerService;
-    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Beer> handlePost(@RequestBody Beer beer){
