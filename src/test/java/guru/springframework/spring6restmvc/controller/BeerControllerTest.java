@@ -30,6 +30,7 @@ class BeerControllerTest {
 
     BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
 
+//    Mockito test
     @Test
     void getBeerById() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
