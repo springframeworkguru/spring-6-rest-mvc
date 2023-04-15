@@ -10,4 +10,8 @@ public interface ServiceIntefaceforGet {
     public Collection<Customer> returnCustomer();
 
     public Customer returnCustomerOfId(UUID id);
+
+    Customer HandlePost(Customer customer);
+
+    void updatebyId(UUID id, Customer customer);
 }

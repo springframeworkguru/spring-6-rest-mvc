@@ -22,4 +22,26 @@ public class Service implements ServiceIntefaceforGet{
         return this.id.get(id);
     }
 
+    @Override
+    public Customer HandlePost(Customer customer) {
+  customer.builder().Customerid(UUID.randomUUID()).
+          Customername(customer.getCustomername()).
+          CustomerDate(customer.getCustomerDate())
+          .CustomerVersion(customer.getCustomerVersion())
+          .lastModfiedDate(customer.getLastModfiedDate()).
+          build();
+
+        id.put(customer.getCustomerid(),customer);
+        return customer;
+    }
+
+    @Override
+    public void updatebyId(UUID id, Customer customer) {
+        Customer customer1 = this.id.get(id);
+        customer1.setCustomername(customer.getCustomername());
+        customer1.setCustomerDate(customer.getCustomerDate());
+        customer1.setCustomerVersion(customer.getCustomerVersion());
+        customer1.setLastModfiedDate(customer.getLastModfiedDate());
+        this.id.put(id,customer1);
+    }
 }
