@@ -23,7 +23,7 @@ public class Service implements ServiceIntefaceforGet{
     }
 
     @Override
-    public Customer HandlePost(Customer customer) {
+    public  Customer HandlePost(Customer customer) {
   customer.builder().Customerid(UUID.randomUUID()).
           Customername(customer.getCustomername()).
           CustomerDate(customer.getCustomerDate())
@@ -43,5 +43,10 @@ public class Service implements ServiceIntefaceforGet{
         customer1.setCustomerVersion(customer.getCustomerVersion());
         customer1.setLastModfiedDate(customer.getLastModfiedDate());
         this.id.put(id,customer1);
+    }
+
+    @Override
+    public void DeletebyId(UUID id) {
+        this.id.remove(id);
     }
 }

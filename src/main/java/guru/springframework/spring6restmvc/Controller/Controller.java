@@ -17,6 +17,11 @@ import java.util.UUID;
 //for the dependencies that we have in this class
 public class Controller {
     private ServiceIntefaceforGet serviceIntefaceforGet;
+@DeleteMapping("{id}")
+    public ResponseEntity DeletebyId(@PathVariable("id") UUID id) {
+        this.serviceIntefaceforGet.DeletebyId(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 @PutMapping("{id}")
     public ResponseEntity updatebyId(@PathVariable("id") UUID id, @RequestBody Customer customer) {
         this.serviceIntefaceforGet.updatebyId(id,customer);

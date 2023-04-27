@@ -11,7 +11,9 @@ public interface ServiceIntefaceforGet {
 
     public Customer returnCustomerOfId(UUID id);
 
-    Customer HandlePost(Customer customer);
+    Customer  HandlePost(Customer customer);
 
     void updatebyId(UUID id, Customer customer);
+
+    void DeletebyId(UUID id);
 }
