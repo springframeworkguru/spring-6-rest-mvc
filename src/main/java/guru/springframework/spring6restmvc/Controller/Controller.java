@@ -1,9 +1,8 @@
 package guru.springframework.spring6restmvc.Controller;
 
-import guru.springframework.spring6restmvc.Customer.Customer;
+import guru.springframework.spring6restmvc.Customer.CustomerDto;
 import guru.springframework.spring6restmvc.Service.ServiceIntefaceforGet;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,8 @@ public class Controller {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 @PutMapping("{id}")
-    public ResponseEntity updatebyId(@PathVariable("id") UUID id, @RequestBody Customer customer) {
-        this.serviceIntefaceforGet.updatebyId(id,customer);
+    public ResponseEntity updatebyId(@PathVariable("id") UUID id, @RequestBody CustomerDto customerDto) {
+        this.serviceIntefaceforGet.updatebyId(id, customerDto);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
         //HttpStatus.NO_CONTENT is an HTTP status code that represents a response
     // from a server to indicate that a request has been successfully processed,
@@ -39,23 +38,23 @@ public class Controller {
     // processed without returning a response body.
     }
 @PostMapping("/api/v1/customers")
-    public ResponseEntity HandlePost(@RequestBody Customer customer) // telling spring
+    public ResponseEntity HandlePost(@RequestBody CustomerDto customerDto) // telling spring
         // Post it to the body of the request that what @RequestBody is doing
      {
-      Customer customer1 = this.serviceIntefaceforGet.HandlePost(customer);
+      CustomerDto customerDto1 = this.serviceIntefaceforGet.HandlePost(customerDto);
          HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Location","/api/v1/customers/"+customer1.getCustomerid().toString());
+            httpHeaders.add("Location","/api/v1/customers/"+ customerDto1.getCustomerid().toString());
             //Above is adding the location and this is best practise
       return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/api/v1/customers",method = RequestMethod.GET)
-    public Collection<Customer> returnCustomer() {
+    public Collection<CustomerDto> returnCustomer() {
         return this.serviceIntefaceforGet.returnCustomer();
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)// making it specfic to get method
-    public Customer returnCustomerOfId(@PathVariable UUID id) {
+    public CustomerDto returnCustomerOfId(@PathVariable UUID id) {
         return this.serviceIntefaceforGet.returnCustomerOfId(id);
     }
 

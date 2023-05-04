@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.Service;
 
-import guru.springframework.spring6restmvc.Customer.Customer;
+import guru.springframework.spring6restmvc.Customer.CustomerDto;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,37 +12,37 @@ import java.util.UUID;
 
 public class Service implements ServiceIntefaceforGet{
 
-    Map<UUID, Customer> id = new HashMap<>();
+    Map<UUID, CustomerDto> id = new HashMap<>();
 
-    public Collection<Customer> returnCustomer() {
+    public Collection<CustomerDto> returnCustomer() {
        return this.id.values();
     }
 
-    public Customer returnCustomerOfId(UUID id) {
+    public CustomerDto returnCustomerOfId(UUID id) {
         return this.id.get(id);
     }
 
     @Override
-    public  Customer HandlePost(Customer customer) {
-  customer.builder().Customerid(UUID.randomUUID()).
-          Customername(customer.getCustomername()).
-          CustomerDate(customer.getCustomerDate())
-          .CustomerVersion(customer.getCustomerVersion())
-          .lastModfiedDate(customer.getLastModfiedDate()).
+    public CustomerDto HandlePost(CustomerDto customerDto) {
+  customerDto.builder().Customerid(UUID.randomUUID()).
+          Customername(customerDto.getCustomername()).
+          CustomerDate(customerDto.getCustomerDate())
+          .CustomerVersion(customerDto.getCustomerVersion())
+          .lastModfiedDate(customerDto.getLastModfiedDate()).
           build();
 
-        id.put(customer.getCustomerid(),customer);
-        return customer;
+        id.put(customerDto.getCustomerid(), customerDto);
+        return customerDto;
     }
 
     @Override
-    public void updatebyId(UUID id, Customer customer) {
-        Customer customer1 = this.id.get(id);
-        customer1.setCustomername(customer.getCustomername());
-        customer1.setCustomerDate(customer.getCustomerDate());
-        customer1.setCustomerVersion(customer.getCustomerVersion());
-        customer1.setLastModfiedDate(customer.getLastModfiedDate());
-        this.id.put(id,customer1);
+    public void updatebyId(UUID id, CustomerDto customerDto) {
+        CustomerDto customerDto1 = this.id.get(id);
+        customerDto1.setCustomername(customerDto.getCustomername());
+        customerDto1.setCustomerDate(customerDto.getCustomerDate());
+        customerDto1.setCustomerVersion(customerDto.getCustomerVersion());
+        customerDto1.setLastModfiedDate(customerDto.getLastModfiedDate());
+        this.id.put(id, customerDto1);
     }
 
     @Override
