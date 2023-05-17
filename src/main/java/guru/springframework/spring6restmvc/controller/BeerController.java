@@ -56,7 +56,7 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity handlePost(@Validated @RequestBody BeerDTO beer){
+    public ResponseEntity postBeer( @RequestBody BeerDTO beer){
 
         BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
