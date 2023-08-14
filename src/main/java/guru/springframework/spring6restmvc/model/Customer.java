@@ -1,6 +1,5 @@
 package guru.springframework.spring6restmvc.model;
 
-
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +10,8 @@ import java.util.UUID;
 @Data
 public class Customer {
     private UUID id;
-    private String customerName;
+    private String name;
     private Integer version;
     private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime updatedDate;
 }

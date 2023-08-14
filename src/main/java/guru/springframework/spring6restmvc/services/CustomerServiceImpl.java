@@ -19,17 +19,17 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer1 = Customer.builder()
                 .id(UUID.randomUUID())
                 .version(1)
-                .customerName("John Doe")
+                .name("John Doe")
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .build();
 
         Customer customer2 = Customer.builder()
                 .id(UUID.randomUUID())
                 .version(1)
-                .customerName("Maximarket Inc.")
+                .name("Maximarket Inc.")
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .build();
 
         customerMap.put(customer1.getId(), customer1);
