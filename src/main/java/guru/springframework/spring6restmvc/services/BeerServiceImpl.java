@@ -94,4 +94,38 @@ public class BeerServiceImpl implements BeerService {
 
         return savedBeer;
     }
+
+    @Override
+    public void updateBeerById(UUID beerId, Beer beer) {
+        Beer existing = beerMap.get(beerId);
+
+        // Change the value only if PUT payload has new information
+        // Otherwise, preserve the original value in all fields
+
+        if (beer.getBeerName() != null) {
+            existing.setBeerName(beer.getBeerName());
+        }
+
+        if (beer.getPrice() != null) {
+            existing.setPrice(beer.getPrice());
+        }
+
+        if (beer.getUpc() != null) {
+            existing.setUpc(beer.getUpc());
+        }
+
+        if (beer.getQuantityOnHand() != null) {
+            existing.setQuantityOnHand(beer.getQuantityOnHand());
+        }
+
+        if (beer.getBeerStyle() != null) {
+            existing.setBeerStyle(beer.getBeerStyle());
+        }
+
+        // Always refresh automatically calculated values
+        existing.setVersion(existing.getVersion() + 1);
+        existing.setUpdateDate(LocalDateTime.now());
+
+        beerMap.put(existing.getId(), existing);
+    }
 }
