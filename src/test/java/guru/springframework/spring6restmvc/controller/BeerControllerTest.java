@@ -55,8 +55,6 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
-
-
     }
 
     @Test
