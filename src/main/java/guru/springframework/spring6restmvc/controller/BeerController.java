@@ -39,7 +39,7 @@ public class BeerController {
         beerService.updateBeerById(beerId, beer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/beer/" + beerId.toString());
+        headers.add("Location",  BEER_PATH + "/" + beerId.toString());
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
@@ -52,7 +52,7 @@ public class BeerController {
         Beer savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/beer/" + savedBeer.getId().toString());
+        headers.add("Location", BEER_PATH + "/" + savedBeer.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
