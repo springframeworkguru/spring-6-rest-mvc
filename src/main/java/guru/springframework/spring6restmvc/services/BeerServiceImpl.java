@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDto;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ import java.util.*;
 @Service
 public class BeerServiceImpl implements BeerService {
 
-    private Map<UUID, Beer> beerMap;
+    private Map<UUID, BeerDto> beerMap;
 
     public BeerServiceImpl() {
         this.beerMap = new HashMap<>();
 
-        Beer beer1 = Beer.builder()
+        BeerDto beer1 = BeerDto.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Galaxy Cat")
@@ -30,10 +30,10 @@ public class BeerServiceImpl implements BeerService {
                 .price(new BigDecimal("12.99"))
                 .quantityOnHand(122)
                 .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .build();
 
-        Beer beer2 = Beer.builder()
+        BeerDto beer2 = BeerDto.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Crank")
@@ -42,10 +42,10 @@ public class BeerServiceImpl implements BeerService {
                 .price(new BigDecimal("11.99"))
                 .quantityOnHand(392)
                 .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .build();
 
-        Beer beer3 = Beer.builder()
+        BeerDto beer3 = BeerDto.builder()
                 .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Sunshine City")
@@ -54,7 +54,7 @@ public class BeerServiceImpl implements BeerService {
                 .price(new BigDecimal("13.99"))
                 .quantityOnHand(144)
                 .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .build();
 
         beerMap.put(beer1.getId(), beer1);
@@ -63,12 +63,12 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> listBeers(){
+    public List<BeerDto> listBeers(){
         return new ArrayList<>(beerMap.values());
     }
 
     @Override
-    public Optional<Beer> getBeerById(UUID id) {
+    public Optional<BeerDto> getBeerById(UUID id) {
 
         log.debug("Get Beer by Id - in service. Id: " + id.toString());
 
@@ -76,12 +76,12 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer saveNewBeer(Beer beer) {
+    public BeerDto saveNewBeer(BeerDto beer) {
 
-        Beer savedBeer = Beer.builder()
+        BeerDto savedBeer = BeerDto.builder()
                 .id(UUID.randomUUID())
                 .createdDate(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
                 .beerName(beer.getBeerName())
                 .beerStyle(beer.getBeerStyle())
                 .quantityOnHand(beer.getQuantityOnHand())
@@ -96,8 +96,8 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateBeerById(UUID beerId, Beer beer) {
-        Beer existing = beerMap.get(beerId);
+    public void updateBeerById(UUID beerId, BeerDto beer) {
+        BeerDto existing = beerMap.get(beerId);
 
         // Change the value only if PUT payload has new information
         // Otherwise, preserve the original value in all fields
@@ -124,7 +124,7 @@ public class BeerServiceImpl implements BeerService {
 
         // Always refresh automatically calculated values
         existing.setVersion(existing.getVersion() + 1);
-        existing.setUpdateDate(LocalDateTime.now());
+        existing.setUpdatedDate(LocalDateTime.now());
 
         beerMap.put(existing.getId(), existing);
     }

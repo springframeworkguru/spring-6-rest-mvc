@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDto;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity updateById(@PathVariable UUID beerId, @RequestBody BeerDto beer) {
 
         beerService.updateBeerById(beerId, beer);
 
@@ -45,11 +45,11 @@ public class BeerController {
     }
 
    @PostMapping(BEER_PATH)
-    public ResponseEntity handlePost(@RequestBody Beer beer) {
+    public ResponseEntity handlePost(@RequestBody BeerDto beer) {
 
         log.debug("Beer Controller: {}", beer.toString());
 
-        Beer savedBeer = beerService.saveNewBeer(beer);
+        BeerDto savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", BEER_PATH + "/" + savedBeer.getId().toString());
@@ -57,7 +57,7 @@ public class BeerController {
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
     @GetMapping(BEER_PATH)
-    public List<Beer> listBeers(){
+    public List<BeerDto> listBeers(){
         return beerService.listBeers();
     }
 
@@ -67,7 +67,7 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH_ID)
-    public Beer getBeerById(@PathVariable("beerId") UUID beerId){
+    public BeerDto getBeerById(@PathVariable("beerId") UUID beerId){
 
         log.debug("Get Beer by Id - in controller!");
 

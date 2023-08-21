@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDto;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -32,7 +31,7 @@ public class CustomerController {
 
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
+    public ResponseEntity updateById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDto customer) {
 
         customerService.updateCustomerById(customerId, customer);
 
@@ -43,11 +42,11 @@ public class CustomerController {
     }
 
     @PostMapping(CUSTOMER_PATH)
-    public ResponseEntity handlePost(@RequestBody Customer customer) {
+    public ResponseEntity handlePost(@RequestBody CustomerDto customer) {
 
         log.debug("Customer Controller: {}", customer.toString());
 
-        Customer savedCustomer = customerService.saveNewCustomer(customer);
+        CustomerDto savedCustomer = customerService.saveNewCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", CUSTOMER_PATH + "/" + savedCustomer.getId().toString());
@@ -56,12 +55,12 @@ public class CustomerController {
     }
 
     @GetMapping(CUSTOMER_PATH)
-    public List<Customer> getCustomers() {
+    public List<CustomerDto> getCustomers() {
         return customerService.listCustomers();
     }
 
     @GetMapping(CUSTOMER_PATH_ID)
-    public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
+    public CustomerDto getCustomerById(@PathVariable("customerId") UUID customerId) {
         return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 }
