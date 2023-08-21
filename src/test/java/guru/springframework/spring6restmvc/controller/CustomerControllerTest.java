@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,7 +109,7 @@ public class CustomerControllerTest {
     @Test
     void getCustomerByIdNotFound() throws Exception {
 
-        given(customerService.getCustomerById(any(UUID.class))).willThrow(NotFoundException.class);
+        given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH + "/" + UUID.randomUUID()))
@@ -121,7 +122,7 @@ public class CustomerControllerTest {
         Customer testCustomer = customerServiceImpl.listCustomers().get(0);
 
         given(customerService.getCustomerById(testCustomer.getId()))
-                .willReturn(testCustomer);
+                .willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
