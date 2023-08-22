@@ -96,7 +96,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateBeerById(UUID beerId, BeerDto beer) {
+    public Optional<BeerDto> updateBeerById(UUID beerId, BeerDto beer) {
         BeerDto existing = beerMap.get(beerId);
 
         // Change the value only if PUT payload has new information
@@ -126,7 +126,7 @@ public class BeerServiceImpl implements BeerService {
         existing.setVersion(existing.getVersion() + 1);
         existing.setUpdatedDate(LocalDateTime.now());
 
-        beerMap.put(existing.getId(), existing);
+        return Optional.of(existing);
     }
 
     @Override
