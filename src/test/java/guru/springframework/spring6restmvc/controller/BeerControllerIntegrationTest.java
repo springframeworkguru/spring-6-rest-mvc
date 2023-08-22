@@ -32,7 +32,6 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testUpdateNotFound() {
-
         UUID randomID = UUID.randomUUID();
         BeerDto empty = BeerDto.builder().build();
 
@@ -126,6 +125,15 @@ class BeerControllerIntegrationTest {
         ResponseEntity responseEntity = beerController.deleteById(beer.getId());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(beerRepository.findById(beer.getId()).isEmpty());
+    }
+
+    @Test
+    void deleteByIdNotFound() {
+        UUID randomID = UUID.randomUUID();
+
+        assertThrows(NotFoundException.class, () -> {
+            beerController.deleteById(randomID);
+        });
     }
 
 }
