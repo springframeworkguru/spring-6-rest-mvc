@@ -32,8 +32,12 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testUpdateNotFound() {
+
+        UUID randomID = UUID.randomUUID();
+        BeerDto empty = BeerDto.builder().build();
+
         assertThrows(NotFoundException.class, () -> {
-            beerController.updateById(UUID.randomUUID(), BeerDto.builder().build());
+            beerController.updateById(randomID, empty);
         });
     }
 
@@ -58,8 +62,9 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testBeerIdNotFound() {
+        UUID randomID = UUID.randomUUID();
         assertThrows(NotFoundException.class, () -> {
-            beerController.getBeerById(UUID.randomUUID());
+            beerController.getBeerById(randomID);
         });
     }
 

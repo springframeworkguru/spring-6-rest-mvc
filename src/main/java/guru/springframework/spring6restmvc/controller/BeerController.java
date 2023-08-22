@@ -38,7 +38,6 @@ public class BeerController {
 
         if (beerService.updateBeerById(beerId, beer).isEmpty()) {
             throw new NotFoundException();
-
         }
 
         HttpHeaders headers = new HttpHeaders();
