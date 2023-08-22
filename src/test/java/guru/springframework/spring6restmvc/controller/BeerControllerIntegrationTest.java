@@ -5,6 +5,8 @@ import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +25,17 @@ class BeerControllerIntegrationTest {
     void testListBeers() {
         List<BeerDto> dtos = beerController.listBeers();
 
-        assertThat(dtos.size()).isEqualTo(3);
+        assertThat(dtos).hasSize(3);
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testEmptyList() {
+
+        beerRepository.deleteAll();
+        List<BeerDto> dtos = beerController.listBeers();
+
+        assertThat(dtos).isEmpty();
     }
 }
