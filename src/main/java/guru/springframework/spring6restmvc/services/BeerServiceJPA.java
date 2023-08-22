@@ -25,7 +25,7 @@ public class BeerServiceJPA implements BeerService {
         return beerRepository.findAll()
                 .stream()
                 .map(beerMapper::beerToBeerDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
