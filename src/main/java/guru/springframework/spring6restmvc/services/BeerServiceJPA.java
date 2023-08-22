@@ -60,6 +60,6 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public void deleteById(UUID beerId) {
-        // ToDo
+        beerRepository.deleteById(beerId);
     }
 }
