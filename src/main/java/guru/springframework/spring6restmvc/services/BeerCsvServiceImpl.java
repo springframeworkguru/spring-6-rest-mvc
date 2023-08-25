@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.services;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import guru.springframework.spring6restmvc.model.BeerCSVRecord;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.FileReader;
 import java.util.List;
 
 @Service
+@Profile("localmysql")
 public class BeerCsvServiceImpl implements BeerCsvService {
 
     @Override
