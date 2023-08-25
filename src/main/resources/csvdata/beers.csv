@@ -1,4 +1,4 @@
-"","count.x","abv","ibu","id","beer","style","brewery_id","ounces","style2","count.y","brewery","city","state","label"
+"row","count.x","abv","ibu","id","beer","style","brewery_id","ounces","style2","count.y","brewery","city","state","label"
 "1",1,0.05,NA,1436,"Pub Beer","American Pale Lager",408,12,NA,409,"10 Barrel Brewing Company","Bend","OR","Pub Beer (10 Barrel Brewing Company)"
 "2",2,0.066,NA,2265,"Devil's Cup","American Pale Ale (APA)",177,12,"American Pale Ale (APA)",178,"18th Street Brewery","Gary","IN","Devil's Cup (18th Street Brewery)"
 "3",3,0.071,NA,2264,"Rise of the Phoenix","American IPA",177,12,"American IPA",178,"18th Street Brewery","Gary","IN","Rise of the Phoenix (18th Street Brewery)"
