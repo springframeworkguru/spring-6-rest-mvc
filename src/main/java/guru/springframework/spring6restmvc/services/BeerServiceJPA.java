@@ -32,8 +32,8 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public Optional<BeerDTO> getBeerById(UUID id) {
-        return Optional.ofNullable(beerMapper.beerToBeerDto(beerRepository.findById(id)
-                .orElse(null)));
+        return beerRepository.findById(id)
+                .map(beerMapper::beerToBeerDto);
     }
 
     @Override
