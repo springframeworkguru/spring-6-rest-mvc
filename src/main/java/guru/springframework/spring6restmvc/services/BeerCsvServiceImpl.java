@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.util.List;
 
 @Service
-@Profile("localmysql")
 public class BeerCsvServiceImpl implements BeerCsvService {
 
     @Override
