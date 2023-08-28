@@ -5,6 +5,7 @@ import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDto;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testListBeers() {
-        List<BeerDto> dtos = beerController.listBeers(null, null);
+        List<BeerDto> dtos = beerController.listBeers(null, null, false);
 
         assertThat(dtos).hasSize(2413);
     }
@@ -107,8 +108,8 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeersByName() throws Exception {
         mockMvc.perform(
-                get(BeerController.BEER_PATH)
-                    .queryParam("beerName", "IPA"))
+                    get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(336)));
     }
@@ -116,10 +117,47 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeersByStyle() throws Exception {
         mockMvc.perform(
-                        get(BeerController.BEER_PATH)
-                                .queryParam("beerStyle", BeerStyle.IPA.name()))
+                    get(BeerController.BEER_PATH)
+                        .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(548)));
+    }
+
+    @Test
+    void testListBeersByNameAndStyle() throws Exception {
+        mockMvc.perform(
+                    get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)));
+    }
+
+
+    @Test
+    void testListBeersByNameAndStyleAndHideInventory() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventory", "false")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
+    }
+
+    @Test
+    void testListBeersByNameAndStyleAndShowInventory() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventory", "true")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
     }
 
 
@@ -129,7 +167,7 @@ class BeerControllerIntegrationTest {
     void testEmptyList() {
 
         beerRepository.deleteAll();
-        List<BeerDto> dtos = beerController.listBeers(null, null);
+        List<BeerDto> dtos = beerController.listBeers(null, null, false);
 
         assertThat(dtos).isEmpty();
     }
