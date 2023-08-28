@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.controller;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDto;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,7 +99,7 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testListBeers() {
-        List<BeerDto> dtos = beerController.listBeers(null);
+        List<BeerDto> dtos = beerController.listBeers(null, null);
 
         assertThat(dtos).hasSize(2413);
     }
@@ -109,8 +110,18 @@ class BeerControllerIntegrationTest {
                 get(BeerController.BEER_PATH)
                     .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(100)));
+                .andExpect(jsonPath("$.size()", is(336)));
     }
+
+    @Test
+    void testListBeersByStyle() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerStyle", BeerStyle.IPA.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(548)));
+    }
+
 
     @Rollback
     @Transactional
@@ -118,7 +129,7 @@ class BeerControllerIntegrationTest {
     void testEmptyList() {
 
         beerRepository.deleteAll();
-        List<BeerDto> dtos = beerController.listBeers(null);
+        List<BeerDto> dtos = beerController.listBeers(null, null);
 
         assertThat(dtos).isEmpty();
     }

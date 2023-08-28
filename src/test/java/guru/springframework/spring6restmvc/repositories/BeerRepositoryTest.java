@@ -27,8 +27,23 @@ class BeerRepositoryTest {
     void testGetBeerListByName() {
         List<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
 
-        assertThat(list.size()).isEqualTo(336);
+        assertThat(list).hasSize(336);
     }
+
+    @Test
+    void testGetBeerListByStyle() {
+        List<Beer> list = beerRepository.findAllByBeerStyle(BeerStyle.IPA);
+
+        assertThat(list).hasSize(548);
+    }
+
+    @Test
+    void testGetBeerListByNameAndStyle() {
+        List<Beer> list = beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%Larry Imperial%", BeerStyle.IPA);
+
+        assertThat(list).hasSize(1);
+    }
+
 
     @Test
     void testSaveBeer() {

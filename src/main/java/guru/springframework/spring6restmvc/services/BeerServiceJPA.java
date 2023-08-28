@@ -3,13 +3,13 @@ package guru.springframework.spring6restmvc.services;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDto;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,15 +24,24 @@ public class BeerServiceJPA implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDto> listBeers(String beerName) {
+    public List<BeerDto> listBeers(String beerName, BeerStyle beerStyle) {
 
         List<Beer> beerList;
 
-        if (StringUtils.hasText(beerName)) {
+        if (StringUtils.hasText(beerName) && beerStyle == null) {
+            // Search parameters has name but no style
             beerList = listBeersByName(beerName);
+        } else if (!StringUtils.hasText(beerName) && beerStyle != null) {
+            // Search parameters has style but no name
+            beerList = listBeersByStyle(beerStyle);
+        } else if (StringUtils.hasText(beerName) && beerStyle != null) {
+            // Search parameters has both style and name
+            beerList = listBeersByNameAndStyleStyle(beerName, beerStyle);
         } else {
+            // Return all
             beerList = beerRepository.findAll();
         }
+
 
         return beerList
                 .stream()
@@ -40,12 +49,16 @@ public class BeerServiceJPA implements BeerService {
                 .toList();
     }
 
-    List<Beer>  listBeersByName(String beerName) {
-        List<Beer> beerList = new ArrayList<>();
+    public List<Beer> listBeersByName(String beerName) {
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
+    }
 
-        // ToDo: filter
+    public List<Beer> listBeersByStyle(BeerStyle beerStyle) {
+        return beerRepository.findAllByBeerStyle(beerStyle);
+    }
 
-        return beerList;
+    public List<Beer> listBeersByNameAndStyleStyle(String beerName, BeerStyle beerStyle) {
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%" + beerName + "%", beerStyle);
     }
 
     @Override
