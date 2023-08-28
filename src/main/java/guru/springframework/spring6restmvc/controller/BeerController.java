@@ -62,7 +62,8 @@ public class BeerController {
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
     @GetMapping(BEER_PATH)
-    public List<BeerDto> listBeers(){
+    public List<BeerDto> listBeers(@RequestParam(required = false) String beerName){
+
         return beerService.listBeers();
     }
 

@@ -4,19 +4,26 @@ import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDto;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest
 class BeerControllerIntegrationTest {
@@ -29,6 +36,17 @@ class BeerControllerIntegrationTest {
 
     @Autowired
     BeerMapper beerMapper;
+
+
+    @Autowired
+    WebApplicationContext wac;
+
+    MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+    }
 
     @Test
     void testUpdateNotFound() {
@@ -80,9 +98,18 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testListBeers() {
-        List<BeerDto> dtos = beerController.listBeers();
+        List<BeerDto> dtos = beerController.listBeers(null);
 
         assertThat(dtos).hasSize(2413);
+    }
+
+    @Test
+    void testListBeersByName() throws Exception {
+        mockMvc.perform(
+                get(BeerController.BEER_PATH)
+                    .queryParam("beerName", "IPA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(100)));
     }
 
     @Rollback
@@ -91,7 +118,7 @@ class BeerControllerIntegrationTest {
     void testEmptyList() {
 
         beerRepository.deleteAll();
-        List<BeerDto> dtos = beerController.listBeers();
+        List<BeerDto> dtos = beerController.listBeers(null);
 
         assertThat(dtos).isEmpty();
     }
