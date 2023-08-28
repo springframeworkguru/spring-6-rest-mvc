@@ -64,7 +64,7 @@ public class BeerController {
     @GetMapping(BEER_PATH)
     public List<BeerDto> listBeers(@RequestParam(required = false) String beerName){
 
-        return beerService.listBeers();
+        return beerService.listBeers(beerName);
     }
 
     @ExceptionHandler(NotFoundException.class)
