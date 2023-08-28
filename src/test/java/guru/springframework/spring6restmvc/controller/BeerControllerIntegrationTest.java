@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
@@ -100,9 +101,9 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testListBeers() {
-        List<BeerDto> dtos = beerController.listBeers(null, null, false);
+        Page<BeerDto> dtos = beerController.listBeers(null, null, false, 1, 25);
 
-        assertThat(dtos).hasSize(2413);
+        assertThat(dtos).hasSize(25);
     }
 
     @Test
@@ -111,7 +112,7 @@ class BeerControllerIntegrationTest {
                     get(BeerController.BEER_PATH)
                         .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(336)));
+                .andExpect(jsonPath("$.content.size()", is(25)));
     }
 
     @Test
@@ -120,7 +121,7 @@ class BeerControllerIntegrationTest {
                     get(BeerController.BEER_PATH)
                         .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(548)));
+                .andExpect(jsonPath("$.content.size()", is(25)));
     }
 
     @Test
@@ -130,7 +131,7 @@ class BeerControllerIntegrationTest {
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(310)));
+                .andExpect(jsonPath("$.content.size()", is(25)));
     }
 
 
@@ -143,8 +144,8 @@ class BeerControllerIntegrationTest {
                                 .queryParam("showInventory", "false")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(310)))
-                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
+                .andExpect(jsonPath("$.content.size()", is(25)))
+                .andExpect(jsonPath("$.content.[0].quantityOnHand").value(IsNull.nullValue()));
     }
 
     @Test
@@ -156,10 +157,23 @@ class BeerControllerIntegrationTest {
                                 .queryParam("showInventory", "true")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(310)))
-                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
+                .andExpect(jsonPath("$.content.size()", is(25)))
+                .andExpect(jsonPath("$.content.[0].quantityOnHand").value(IsNull.notNullValue()));
     }
 
+    @Test
+    void testListBeersByNameAndStyleAndShowInventoryPage2() throws Exception {
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                                .queryParam("showInventory", "true")
+                                .queryParam("pageNumber", "2")
+                                .queryParam("pageSize", "50"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", is(50)))
+                .andExpect(jsonPath("$.content.[0].quantityOnHand").value(IsNull.notNullValue()));
+    }
 
     @Rollback
     @Transactional
@@ -167,7 +181,7 @@ class BeerControllerIntegrationTest {
     void testEmptyList() {
 
         beerRepository.deleteAll();
-        List<BeerDto> dtos = beerController.listBeers(null, null, false);
+        Page<BeerDto> dtos = beerController.listBeers(null, null, false, 1, 25);
 
         assertThat(dtos).isEmpty();
     }
@@ -199,6 +213,7 @@ class BeerControllerIntegrationTest {
         Beer beer = beerRepository.findAll().get(0);
 
         ResponseEntity responseEntity = beerController.deleteById(beer.getId());
+
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(beerRepository.findById(beer.getId()).isEmpty());
     }
