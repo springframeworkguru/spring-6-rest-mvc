@@ -17,8 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BeerOrder {
-
+public class BeerOrderLine {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -39,7 +38,8 @@ public class BeerOrder {
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
-    private String customerRef;
+    private Integer orderQuantity = 0;
+    private Integer quantityAllocated = 0;
 
     public boolean isNew() { return this.id == null; }
 }
