@@ -41,5 +41,8 @@ public class BeerOrder {
 
     private String customerRef;
 
+    @ManyToOne
+    private Customer customer;
+
     public boolean isNew() { return this.id == null; }
 }
