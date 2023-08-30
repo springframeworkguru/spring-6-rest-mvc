@@ -2,11 +2,11 @@ DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS beer_category;
 
 CREATE TABLE category (
-    id                  VARCHAR(36) NOT NULL PRIMARY KEY,
-    description         VARCHAR(50),
-    created_date        TIMESTAMP,
-    last_modified_date  DATETIME(6) DEFAULT NULL,
-    version             BIGINT DEFAULT NULL
+    id            VARCHAR(36) NOT NULL PRIMARY KEY,
+    description   VARCHAR(50),
+    created_date  TIMESTAMP,
+    updated_date  DATETIME(6) DEFAULT NULL,
+    version       BIGINT DEFAULT NULL
 ) ENGINE = InnoDB;
 
 CREATE TABLE beer_category (
