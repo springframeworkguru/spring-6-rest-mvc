@@ -28,6 +28,9 @@ public class BeerOrderLine {
     @Column(length = 36, columnDefinition = "varchar(36", updatable = false, nullable = false)
     private UUID id;
 
+    @ManyToOne
+    private Beer beer;
+
     @Version
     private Long version;
 
@@ -40,6 +43,9 @@ public class BeerOrderLine {
 
     private Integer orderQuantity = 0;
     private Integer quantityAllocated = 0;
+
+    @ManyToOne
+    private BeerOrder beerOrder;
 
     public boolean isNew() { return this.id == null; }
 }
