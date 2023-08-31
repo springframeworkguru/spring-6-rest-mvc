@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDto;
@@ -7,14 +8,17 @@ import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,6 +44,9 @@ class BeerControllerIntegrationTest {
     @Autowired
     BeerMapper beerMapper;
 
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     WebApplicationContext wac;
@@ -227,4 +234,34 @@ class BeerControllerIntegrationTest {
         });
     }
 
+    // This test was to showcase optimistic locking with JPA
+    @Disabled
+    @Test
+    void testUpdateBeerBadVersion() throws Exception {
+        Beer beer = beerRepository.findAll().get(0);
+        BeerDto dto = beerMapper.beerToBeerDto(beer);
+        dto.setBeerName("Updated name");
+
+        MvcResult result = mockMvc.perform(
+                                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .accept(MediaType.APPLICATION_JSON)
+                                                .content(objectMapper.writeValueAsString(dto)))
+                                    .andExpect(status().isNoContent())
+                                    .andReturn();
+
+        System.out.println(result.getResponse().getContentAsString());
+
+        dto.setBeerName("Updated name #2");
+
+        MvcResult result2 = mockMvc.perform(
+                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        System.out.println(result2.getResponse().getContentAsString());
+    }
 }
