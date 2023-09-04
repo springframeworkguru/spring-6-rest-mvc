@@ -17,18 +17,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,11 +59,25 @@ class BeerControllerIntegrationTest {
 
     MockMvc mockMvc;
 
-    @Value("${spring.security.user.name}")
-    private String USERNAME;
-
-    @Value("${spring.security.user.password}")
-    private String PASSWORD;
+    // OAuth 2.0
+    public static final SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor jwtRequestPostProcessor =
+        jwt().jwt(jwt -> {
+                    jwt.claims(claims -> {
+                            claims.put("scope", "message.read");
+                            claims.put("scope", "message.write");
+                    })
+                    .subject("messaging-client")
+                    .notBefore(Instant.now().minusSeconds(5));
+        });
+    // =========================================
+    // HTTP Basic Authentication
+    // =========================================
+    // @Value("${spring.security.user.name}")
+    // private String USERNAME;
+    // -----------------------------------------
+    // @Value("${spring.security.user.password}")
+    // private String PASSWORD;
+    // =========================================
 
     @BeforeEach
     void setUp() {
@@ -128,17 +145,29 @@ class BeerControllerIntegrationTest {
     void testListBeersByName() throws Exception {
         mockMvc.perform(
                     get(BeerController.BEER_PATH)
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", is(25)));
     }
 
+    @Disabled
+    @Test
+    void testListBeersByNameWithBasicAuth() throws Exception {
+        mockMvc.perform(
+                    get(BeerController.BEER_PATH)
+                        .with(jwtRequestPostProcessor)
+                        .queryParam("beerName", "IPA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.size()", is(25)));
+    }
+
+
     @Test
     void testListBeersByStyle() throws Exception {
         mockMvc.perform(
                     get(BeerController.BEER_PATH)
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", is(25)));
@@ -148,7 +177,7 @@ class BeerControllerIntegrationTest {
     void testListBeersByNameAndStyle() throws Exception {
         mockMvc.perform(
                     get(BeerController.BEER_PATH)
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
@@ -159,11 +188,11 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeersByNameAndStyleAndHideInventory() throws Exception {
         mockMvc.perform(
-                        get(BeerController.BEER_PATH)
-                                .with(httpBasic(USERNAME, PASSWORD))
-                                .queryParam("beerName", "IPA")
-                                .queryParam("beerStyle", BeerStyle.IPA.name())
-                                .queryParam("showInventory", "false")
+                    get(BeerController.BEER_PATH)
+                        .with(jwtRequestPostProcessor)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "false")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", is(25)))
@@ -173,11 +202,11 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeersByNameAndStyleAndShowInventory() throws Exception {
         mockMvc.perform(
-                        get(BeerController.BEER_PATH)
-                                .with(httpBasic(USERNAME, PASSWORD))
-                                .queryParam("beerName", "IPA")
-                                .queryParam("beerStyle", BeerStyle.IPA.name())
-                                .queryParam("showInventory", "true")
+                    get(BeerController.BEER_PATH)
+                        .with(jwtRequestPostProcessor)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "true")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", is(25)))
@@ -187,13 +216,13 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeersByNameAndStyleAndShowInventoryPage2() throws Exception {
         mockMvc.perform(
-                        get(BeerController.BEER_PATH)
-                                .with(httpBasic(USERNAME, PASSWORD))
-                                .queryParam("beerName", "IPA")
-                                .queryParam("beerStyle", BeerStyle.IPA.name())
-                                .queryParam("showInventory", "true")
-                                .queryParam("pageNumber", "2")
-                                .queryParam("pageSize", "50"))
+                    get(BeerController.BEER_PATH)
+                        .with(jwtRequestPostProcessor)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "true")
+                        .queryParam("pageNumber", "2")
+                        .queryParam("pageSize", "50"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.size()", is(50)))
                 .andExpect(jsonPath("$.content.[0].quantityOnHand").value(IsNull.notNullValue()));
@@ -261,7 +290,7 @@ class BeerControllerIntegrationTest {
 
         MvcResult result = mockMvc.perform(
                                         put(BeerController.BEER_PATH_ID, beer.getId())
-                                                .with(httpBasic(USERNAME, PASSWORD))
+                                                .with(jwtRequestPostProcessor)
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .accept(MediaType.APPLICATION_JSON)
                                                 .content(objectMapper.writeValueAsString(dto)))
@@ -273,13 +302,13 @@ class BeerControllerIntegrationTest {
         dto.setBeerName("Updated name #2");
 
         MvcResult result2 = mockMvc.perform(
-                        put(BeerController.BEER_PATH_ID, beer.getId())
-                                .with(httpBasic(USERNAME, PASSWORD))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isNoContent())
-                .andReturn();
+                                        put(BeerController.BEER_PATH_ID, beer.getId())
+                                            .with(jwtRequestPostProcessor)
+                                            .contentType(MediaType.APPLICATION_JSON)
+                                            .accept(MediaType.APPLICATION_JSON)
+                                            .content(objectMapper.writeValueAsString(dto)))
+                            .andExpect(status().isNoContent())
+                            .andReturn();
 
         System.out.println(result2.getResponse().getContentAsString());
     }

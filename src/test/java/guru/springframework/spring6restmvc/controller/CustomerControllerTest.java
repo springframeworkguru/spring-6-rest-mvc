@@ -14,8 +14,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,6 +27,7 @@ import static org.mockito.BDDMockito.given;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -43,11 +46,25 @@ class CustomerControllerTest {
 
     CustomerServiceImpl customerServiceImpl;
 
-    @Value("${spring.security.user.name}")
-    private String USERNAME;
-
-    @Value("${spring.security.user.password}")
-    private String PASSWORD;
+    // OAuth 2.0
+    public static final SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor jwtRequestPostProcessor =
+            jwt().jwt(jwt -> {
+                jwt.claims(claims -> {
+                            claims.put("scope", "message.read");
+                            claims.put("scope", "message.write");
+                        })
+                        .subject("messaging-client")
+                        .notBefore(Instant.now().minusSeconds(5));
+            });
+    // =========================================
+    // HTTP Basic Authentication
+    // =========================================
+    // @Value("${spring.security.user.name}")
+    // private String USERNAME;
+    // -----------------------------------------
+    // @Value("${spring.security.user.password}")
+    // private String PASSWORD;
+    // =========================================
 
     @BeforeEach
     void setUp() {
@@ -62,7 +79,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     delete(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -82,7 +99,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     put(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
@@ -103,7 +120,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     post(CustomerController.CUSTOMER_PATH)
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isCreated())
@@ -117,7 +134,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH)
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -131,7 +148,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH + "/" + UUID.randomUUID())
-                        .with(httpBasic(USERNAME, PASSWORD)))
+                        .with(jwtRequestPostProcessor))
                 .andExpect(status().isNotFound());
     }
 
@@ -154,7 +171,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
