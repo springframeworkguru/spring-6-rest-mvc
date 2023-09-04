@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.spring6restmvc.config.SpringSecurityConfig;
 import guru.springframework.spring6restmvc.model.CustomerDto;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,11 +24,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
-public class CustomerControllerTest {
+@Import(SpringSecurityConfig.class)
+class CustomerControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -37,6 +42,12 @@ public class CustomerControllerTest {
     CustomerService customerService;
 
     CustomerServiceImpl customerServiceImpl;
+
+    @Value("${spring.security.user.name}")
+    private String USERNAME;
+
+    @Value("${spring.security.user.password}")
+    private String PASSWORD;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +62,7 @@ public class CustomerControllerTest {
 
         mockMvc.perform(
                     delete(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
