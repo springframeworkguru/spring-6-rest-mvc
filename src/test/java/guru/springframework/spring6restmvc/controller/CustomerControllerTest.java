@@ -82,6 +82,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     put(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
@@ -102,6 +103,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     post(CustomerController.CUSTOMER_PATH)
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isCreated())
@@ -115,6 +117,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH)
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -127,9 +130,19 @@ class CustomerControllerTest {
         given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 
         mockMvc.perform(
-                    get(CustomerController.CUSTOMER_PATH + "/" + UUID.randomUUID()))
+                    get(CustomerController.CUSTOMER_PATH + "/" + UUID.randomUUID())
+                        .with(httpBasic(USERNAME, PASSWORD)))
                 .andExpect(status().isNotFound());
+    }
 
+    @Test
+    void getCustomerNotAuthenticated() throws Exception {
+
+        given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(
+                    get(CustomerController.CUSTOMER_PATH + "/" + UUID.randomUUID()))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -141,6 +154,7 @@ class CustomerControllerTest {
 
         mockMvc.perform(
                     get(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

@@ -176,6 +176,17 @@ class BeerControllerTest {
     }
 
     @Test
+    void getBeerNotAuthenticated() throws Exception {
+
+        given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
+
+        mockMvc.perform(
+                    get(BeerController.BEER_PATH + "/" + UUID.randomUUID()))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
     void getBeerById() throws Exception {
         BeerDto testBeer = beerServiceImpl.listBeers(null, null, false, 1, 25).getContent().get(0);
 
