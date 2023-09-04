@@ -1,7 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.spring6restmvc.config.SpringSecurityConfig;
+import guru.springframework.spring6restmvc.config.SpringSecurityConfigOAuth2;
 import guru.springframework.spring6restmvc.model.CustomerDto;
 import guru.springframework.spring6restmvc.services.CustomerService;
 import guru.springframework.spring6restmvc.services.CustomerServiceImpl;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
-@Import(SpringSecurityConfig.class)
+@Import(SpringSecurityConfigOAuth2.class)
 class CustomerControllerTest {
 
     @Autowired
