@@ -12,6 +12,14 @@ class Spring6RestMvcApplicationTests {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    TestController testController;
+
+    @Test
+    void testAutowiredController() {
+        System.out.println(testController.sayHello());
+    }
+
     @Test
     void testGetControllerFromCtx() {
         TestController testController = applicationContext.getBean(TestController.class);
