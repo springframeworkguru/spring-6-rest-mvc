@@ -1,14 +1,16 @@
 package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.model.*;
+import org.springframework.stereotype.*;
 
 import java.math.*;
 import java.time.*;
 import java.util.*;
 
-public class BearServiceImpl implements BearService {
+@Service
+public class BeerServiceImpl implements BeerService {
     @Override
-    public Beer getBearById(UUID id) {
+    public Beer getBeerById(UUID id) {
         return Beer.builder()
                 .id(id)
                 .version(1)
