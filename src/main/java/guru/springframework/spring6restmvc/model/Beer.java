@@ -7,6 +7,7 @@ import java.time.*;
 import java.util.*;
 
 @Data
+@Builder
 public class Beer {
     private UUID id;
     private Integer version;
