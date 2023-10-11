@@ -4,6 +4,6 @@ import guru.springframework.spring6restmvc.model.*;
 
 import java.util.*;
 
-public interface BearService {
-    Beer getBearById(UUID id);
+public interface BeerService {
+    Beer getBeerById(UUID id);
 }
