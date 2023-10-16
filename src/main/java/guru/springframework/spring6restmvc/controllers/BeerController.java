@@ -10,18 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 @Slf4j
 @AllArgsConstructor
-@RestController()
+@RestController
+@RequestMapping("/api/v1/beer")
 public class BeerController {
     private final BeerService beerService;
 
-    @RequestMapping("/api/v1/beer")
+    @RequestMapping(method = RequestMethod.GET)
     public List<Beer> listBeers(){
         return beerService.listBeers();
     }
 
-    public Beer getBeerById(UUID id){
+    @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
+    public Beer getBeerById(@PathVariable("beerId") UUID beerId){
         log.debug("Get beer by id - controller");
-        return  beerService.getBeerById(id);
+        return  beerService.getBeerById(beerId);
     }
-
 }
