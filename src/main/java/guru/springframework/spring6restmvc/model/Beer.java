@@ -11,11 +11,11 @@ import java.util.*;
 public class Beer {
     private UUID id;
     private Integer version;
-    private String bearName;
+    private String beerName;
     private BeerStyle beerStyle;
     private String upc;
     private Integer quantityOnHand;
     private BigDecimal price;
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }
