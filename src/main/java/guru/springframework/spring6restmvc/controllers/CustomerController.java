@@ -15,8 +15,8 @@ import java.util.*;
 public class CustomerController {
     CustomerService customerService;
     @RequestMapping(method = RequestMethod.GET)
-    public List<Customer> listCustomers(){
-        return customerService.listCustomers();
+    public List<Customer> listAllCustomers(){
+        return customerService.listAllCustomers();
     }
 
     @RequestMapping(value = "{customerId}", method = RequestMethod.GET)

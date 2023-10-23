@@ -6,5 +6,5 @@ import java.util.*;
 
 public interface CustomerService {
     Customer getCustomerById(UUID id);
-    List<Customer> listCustomers();
+    List<Customer> listAllCustomers();
 }
