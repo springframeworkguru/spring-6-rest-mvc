@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.services;
 import guru.springframework.spring6restmvc.model.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
+import org.springframework.util.*;
 
 import java.math.*;
 import java.time.*;
@@ -101,5 +102,25 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public void deleteById(UUID beerId) {
         beerMap.remove(beerId);
+    }
+
+    @Override
+    public void patchById(UUID beerId, Beer beer) {
+        Beer existing = beerMap.get(beerId);
+        if (StringUtils.hasText(beer.getBeerName())) {
+            existing.setBeerName(beer.getBeerName());
+        }
+        if (beer.getBeerStyle() != null) {
+            existing.setBeerStyle(beer.getBeerStyle());
+        }
+        if (beer.getPrice() != null) {
+            existing.setPrice(beer.getPrice());
+        }
+        if (beer.getQuantityOnHand() != null) {
+            existing.setQuantityOnHand(beer.getQuantityOnHand());
+        }
+        if (StringUtils.hasText(beer.getUpc())) {
+            existing.setUpc(beer.getUpc());
+        }
     }
 }
