@@ -4,6 +4,7 @@ import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,12 @@ import java.util.*;
 @RequestMapping("/api/v1/beer")
 public class BeerController {
     private final BeerService beerService;
+
+    @PostMapping
+    public ResponseEntity handlePost(@RequestBody Beer beer) {
+         Beer savedBeer = beerService.saveNewBeer(beer);
+         return new ResponseEntity(HttpStatus.CREATED);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Beer> listBeers(){
