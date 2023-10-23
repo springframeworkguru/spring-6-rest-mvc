@@ -30,6 +30,12 @@ public class BeerController {
          return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
     }
 
+    @DeleteMapping(value = "{beerId}")
+    public ResponseEntity deleteById(@PathVariable("beerId") UUID beerId){
+        beerService.deleteById(beerId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<Beer> listBeers(){
         return beerService.listBeers();
