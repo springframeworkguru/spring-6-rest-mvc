@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.services;
 import guru.springframework.spring6restmvc.model.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
+import org.springframework.util.*;
 
 import java.math.*;
 import java.time.*;
@@ -69,5 +70,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomerById(UUID customerId) {
         customerMap.remove(customerId);
+    }
+
+    @Override
+    public void patchCustomerById(UUID customerId, Customer customer) {
+        Customer existing = this.getCustomerById(customerId);
+        if (StringUtils.hasText(customer.getCustomerName())){
+            existing.setCustomerName(customer.getCustomerName());
+        }
     }
 }
