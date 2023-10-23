@@ -22,7 +22,7 @@ public class BeerController {
 
     @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
     public Beer getBeerById(@PathVariable("beerId") UUID beerId){
-        log.debug("Get beer by id - controller");
+        log.debug("Get beer by id - in controller");
         return  beerService.getBeerById(beerId);
     }
 }
