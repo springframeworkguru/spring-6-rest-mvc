@@ -5,7 +5,6 @@ import guru.springframework.spring6restmvc.services.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.springframework.http.*;
-import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -15,6 +14,11 @@ import java.util.*;
 @RequestMapping("/api/v1/beer")
 public class BeerController {
     private final BeerService beerService;
+    @PutMapping(value = "{beerId}")
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
+        beerService.updateBeerById(beerId, beer);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping
     public ResponseEntity handlePost(@RequestBody Beer beer) {
