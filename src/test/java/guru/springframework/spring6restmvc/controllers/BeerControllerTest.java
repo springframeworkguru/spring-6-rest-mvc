@@ -1,5 +1,7 @@
 package guru.springframework.spring6restmvc.controllers;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
 import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
 import org.hamcrest.core.*;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.*;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -24,10 +27,35 @@ class BeerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     BeerService beerService;
 
-    BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
+    BeerServiceImpl beerServiceImpl;
+
+    @BeforeEach
+    void setUp() {
+        beerServiceImpl = new BeerServiceImpl();
+    }
+
+    @Test
+    void createBeer() throws Exception {
+        Beer beer = beerServiceImpl.listBeers().get(0);
+        beer.setVersion(null);
+        beer.setVersion(null);
+
+        given(beerService.saveNewBeer(any(Beer.class))).willReturn(beerServiceImpl.listBeers().get(1));
+
+        mockMvc.perform(post("/api/v1/beer")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(beer)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+        ;
+    }
 
     @Test
     void listBeers() throws Exception {
