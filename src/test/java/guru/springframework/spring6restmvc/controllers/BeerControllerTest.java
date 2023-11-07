@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-
 import java.util.*;
 
 @WebMvcTest(BeerController.class)
@@ -31,6 +30,18 @@ class BeerControllerTest {
     BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
 
     @Test
+    void listBeers() throws Exception {
+        given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
+
+        mockMvc.perform(get("/api/v1/beer")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", Is.is(3)))
+        ;
+    }
+
+    @Test
     void getBeerById() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
@@ -40,8 +51,8 @@ class BeerControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath( "$.id", Is.is(testBeer.getId().toString()) ))
-                .andExpect(jsonPath( "$.beerName", Is.is(testBeer.getBeerName()) ))
+                .andExpect(jsonPath("$.id", Is.is(testBeer.getId().toString())))
+                .andExpect(jsonPath("$.beerName", Is.is(testBeer.getBeerName())))
         ;
     }
 }
