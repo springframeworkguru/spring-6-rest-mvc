@@ -14,7 +14,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1/customer")
 public class CustomerController {
-    CustomerService customerService;
+    private final CustomerService customerService;
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> listAllCustomers(){
         return customerService.listAllCustomers();
