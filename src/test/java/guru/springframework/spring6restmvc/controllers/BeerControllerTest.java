@@ -2,7 +2,6 @@ package guru.springframework.spring6restmvc.controllers;
 
 import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import org.hamcrest.core.*;
 import org.junit.jupiter.api.*;
 import static org.mockito.ArgumentMatchers.any;
