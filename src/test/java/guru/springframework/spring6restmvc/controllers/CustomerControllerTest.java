@@ -1,13 +1,14 @@
 package guru.springframework.spring6restmvc.controllers;
 
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
 import org.hamcrest.core.*;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.mock.mockito.*;
@@ -15,6 +16,7 @@ import org.springframework.http.*;
 import org.springframework.test.web.servlet.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,6 +40,19 @@ class CustomerControllerTest {
     @BeforeEach
     void setUp(){
         customerServiceImpl = new CustomerServiceImpl();
+    }
+
+    @Test
+    void updateCustomer() throws Exception {
+        Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
+        mockMvc.perform(put("/api/v1/customer/" + testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(testCustomer)))
+                .andExpect(status().isNoContent())
+        ;
+        verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
+
     }
     @Test
     void createCustomer() throws Exception {
