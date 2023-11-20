@@ -12,22 +12,24 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
 public class CustomerController {
+    public static final String CUSTOMER_PATH = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{customerId}";
+
     private final CustomerService customerService;
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(value = CUSTOMER_PATH)
     public List<Customer> listAllCustomers(){
         return customerService.listAllCustomers();
     }
 
 
-    @RequestMapping(value = "{customerId}", method = RequestMethod.GET)
+    @GetMapping(value = CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable("customerId") UUID customerId){
         log.debug("Get beer by id - controller");
         return  customerService.getCustomerById(customerId);
     }
 
-    @PostMapping
+    @PostMapping(value = CUSTOMER_PATH)
     public ResponseEntity handlePost(@RequestBody Customer customer){
         Customer savedCustomer = customerService.saveNewCustomer(customer);
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -35,19 +37,19 @@ public class CustomerController {
         return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
     }
 
-    @PutMapping("{customerId}")
+    @PutMapping(value = CUSTOMER_PATH_ID)
     public ResponseEntity updateCustomerById(@PathVariable UUID customerId, @RequestBody Customer customer){
         customerService.updateCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("{customerId}")
+    @PatchMapping(value = CUSTOMER_PATH_ID)
     public ResponseEntity patchCustomerById(@PathVariable UUID customerId, @RequestBody Customer customer){
         customerService.patchCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{customerId}")
+    @DeleteMapping(value = CUSTOMER_PATH_ID)
     public ResponseEntity deleteCustomerById(@PathVariable UUID customerId){
         customerService.deleteCustomerById(customerId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
