@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
+import org.assertj.core.api.*;
 import org.hamcrest.core.*;
 import org.junit.jupiter.api.*;
+import org.mockito.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,6 +57,20 @@ class CustomerControllerTest {
         verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
 
     }
+
+    @Test
+    void deleteCustomer() throws Exception {
+        Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
+        mockMvc.perform(delete("/api/v1/customer/" + testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+        ;
+        ArgumentCaptor<UUID> argumentCaptor = ArgumentCaptor.forClass(UUID.class);
+
+        verify(customerService).deleteCustomerById(argumentCaptor.capture());
+        AssertionsForClassTypes.assertThat(testCustomer.getId()).isEqualTo(argumentCaptor.getValue());
+    }
+
     @Test
     void createCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
