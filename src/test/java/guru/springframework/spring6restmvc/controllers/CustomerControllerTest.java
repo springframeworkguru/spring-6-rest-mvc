@@ -1,31 +1,22 @@
 package guru.springframework.spring6restmvc.controllers;
 
-import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import guru.springframework.spring6restmvc.model.*;
 import guru.springframework.spring6restmvc.services.*;
 import org.assertj.core.api.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import org.hamcrest.core.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.mock.mockito.*;
 import org.springframework.http.*;
 import org.springframework.test.web.servlet.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.*;
 
@@ -55,7 +46,7 @@ class CustomerControllerTest {
     @Test
     void updateCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
-        mockMvc.perform(put(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(testCustomer)))
@@ -72,7 +63,7 @@ class CustomerControllerTest {
         Map<String, Object> customerMap = new HashMap<>();
         customerMap.put("customerName", "New Name");
 
-        mockMvc.perform(patch(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(customerMap)))
                 .andExpect(status().isNoContent());
@@ -85,7 +76,7 @@ class CustomerControllerTest {
     @Test
     void deleteCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
-        mockMvc.perform(delete(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
         ;
@@ -124,7 +115,7 @@ class CustomerControllerTest {
         Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
         given(customerService.getCustomerById(any(UUID.class))).willReturn(testCustomer);
 
-        mockMvc.perform(get(CustomerController.CUSTOMER_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
