@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
+import guru.springframework.spring6restmvc.controllers.*;
 import guru.springframework.spring6restmvc.model.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
@@ -37,8 +38,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
-        return customerMap.get(id);
+    public  Optional<Customer> getCustomerById(UUID id) {
+        return Optional.of(customerMap.get(id));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomerById(UUID customerId, Customer customer) {
-        Customer existing = this.getCustomerById(customerId);
+        Customer existing = this.getCustomerById(customerId).orElseThrow(NotFoundException::new);
         existing.setCustomerName(customer.getCustomerName());
         existing.setLastModifiedDate(LocalDateTime.now());
     }
@@ -74,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void patchCustomerById(UUID customerId, Customer customer) {
-        Customer existing = this.getCustomerById(customerId);
+        Customer existing = this.getCustomerById(customerId).orElseThrow(NotFoundException::new);
         if (StringUtils.hasText(customer.getCustomerName())){
             existing.setCustomerName(customer.getCustomerName());
         }

@@ -113,7 +113,7 @@ class CustomerControllerTest {
     @Test
     void getCustomerById() throws Exception {
         Customer testCustomer = customerServiceImpl.listAllCustomers().get(0);
-        given(customerService.getCustomerById(any(UUID.class))).willReturn(testCustomer);
+        given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON))

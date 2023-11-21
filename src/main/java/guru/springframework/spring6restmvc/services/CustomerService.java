@@ -5,7 +5,7 @@ import guru.springframework.spring6restmvc.model.*;
 import java.util.*;
 
 public interface CustomerService {
-    Customer getCustomerById(UUID id);
+    Optional<Customer> getCustomerById(UUID id);
     List<Customer> listAllCustomers();
     Customer saveNewCustomer(Customer customer);
 
