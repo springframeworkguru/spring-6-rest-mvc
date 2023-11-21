@@ -129,4 +129,15 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.beerName", Is.is(testBeer.getBeerName())))
         ;
     }
+
+    @Test
+    void getBeerByIdNotFound() throws Exception{
+
+        given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+        ;
+    }
 }
