@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
+import guru.springframework.spring6restmvc.controllers.*;
 import guru.springframework.spring6restmvc.model.*;
 import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
@@ -59,9 +60,9 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer getBeerById(UUID id) {
+    public Optional<Beer> getBeerById(UUID id) {
         log.debug("Get beer by id - service");
-        return beerMap.get(id);
+        return Optional.of(beerMap.get(id));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void updateBeerById(UUID beerId, Beer beer) {
-        Beer existing = beerMap.get(beerId);
+        Beer existing = this.getBeerById(beerId).orElseThrow(NotFoundException::new);
         existing.setBeerName(beer.getBeerName());
         existing.setBeerStyle(beer.getBeerStyle());
         existing.setUpdatedDate(LocalDateTime.now());
@@ -106,7 +107,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void patchById(UUID beerId, Beer beer) {
-        Beer existing = beerMap.get(beerId);
+        Beer existing = this.getBeerById(beerId).orElseThrow(NotFoundException::new);
         if (StringUtils.hasText(beer.getBeerName())) {
             existing.setBeerName(beer.getBeerName());
         }

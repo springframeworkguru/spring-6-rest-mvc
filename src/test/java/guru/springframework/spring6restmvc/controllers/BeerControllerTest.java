@@ -119,7 +119,7 @@ class BeerControllerTest {
     void getBeerById() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
 
-        given(beerService.getBeerById(any(UUID.class))).willReturn(testBeer);
+        given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.of(testBeer));
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON))
