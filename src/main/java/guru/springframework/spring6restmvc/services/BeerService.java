@@ -5,14 +5,14 @@ import guru.springframework.spring6restmvc.model.*;
 import java.util.*;
 
 public interface BeerService {
-    Optional<Beer> getBeerById(UUID id);
-    List<Beer> listBeers();
+    Optional<BeerDTO> getBeerById(UUID id);
+    List<BeerDTO> listBeers();
 
-    Beer saveNewBeer(Beer beer);
+    BeerDTO saveNewBeer(BeerDTO beer);
 
-    void updateBeerById(UUID beerId, Beer beer);
+    void updateBeerById(UUID beerId, BeerDTO beer);
 
     void deleteById(UUID beerId);
 
-    void patchById(UUID beerId, Beer beer);
+    void patchById(UUID beerId, BeerDTO beer);
 }
