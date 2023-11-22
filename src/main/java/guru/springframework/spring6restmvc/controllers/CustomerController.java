@@ -18,33 +18,33 @@ public class CustomerController {
 
     private final CustomerService customerService;
     @GetMapping(value = CUSTOMER_PATH)
-    public List<Customer> listAllCustomers(){
+    public List<CustomerDTO> listAllCustomers(){
         return customerService.listAllCustomers();
     }
 
 
     @GetMapping(value = CUSTOMER_PATH_ID)
-    public Customer getCustomerById(@PathVariable("customerId") UUID customerId){
+    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID customerId){
         log.debug("Get beer by id - controller");
         return  customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(value = CUSTOMER_PATH)
-    public ResponseEntity handlePost(@RequestBody Customer customer){
-        Customer savedCustomer = customerService.saveNewCustomer(customer);
+    public ResponseEntity handlePost(@RequestBody CustomerDTO customer){
+        CustomerDTO savedCustomer = customerService.saveNewCustomer(customer);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Location", "/api/v1/customer/" + savedCustomer.getId());
         return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping(value = CUSTOMER_PATH_ID)
-    public ResponseEntity updateCustomerById(@PathVariable UUID customerId, @RequestBody Customer customer){
+    public ResponseEntity updateCustomerById(@PathVariable UUID customerId, @RequestBody CustomerDTO customer){
         customerService.updateCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping(value = CUSTOMER_PATH_ID)
-    public ResponseEntity patchCustomerById(@PathVariable UUID customerId, @RequestBody Customer customer){
+    public ResponseEntity patchCustomerById(@PathVariable UUID customerId, @RequestBody CustomerDTO customer){
         customerService.patchCustomerById(customerId, customer);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
