@@ -1,4 +1,4 @@
-package guru.springframework.spring6restmvc.service;
+package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.model.Customer;
 
@@ -9,11 +9,13 @@ public interface CustomerService {
 
 
     List<Customer> listCustomers();
-     Customer getById(UUID Id);
+    Customer getById(UUID Id);
 
     Customer saveCustomer(Customer customer);
 
-    void deleteCustomerById(UUID customerId);
+    void deleteById(UUID customerId);
 
     void patchCustomerById(UUID customerId, Customer customer);
+
+    void updateCustomerById(Customer customer,UUID customerId);
 }

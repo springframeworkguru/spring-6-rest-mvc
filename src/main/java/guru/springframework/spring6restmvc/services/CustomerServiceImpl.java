@@ -1,4 +1,4 @@
-package guru.springframework.spring6restmvc.service;
+package guru.springframework.spring6restmvc.services;
 
 import guru.springframework.spring6restmvc.model.Customer;
 import org.springframework.stereotype.Service;
@@ -52,9 +52,16 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    public List<Customer> listCustomers() {
+        return new ArrayList<>(customerMap.values());
+    }
+
+    @Override
     public Customer getById(UUID Id) {
         return customerMap.get(Id);
     }
+
+
 
     @Override
     public Customer saveCustomer(Customer customer) {
@@ -72,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService{
 
 
     @Override
-    public void updateCustomer(Customer customer,UUID customerId) {
+    public void updateCustomerById(Customer customer,UUID customerId) {
         Customer existingCustomer= customerMap.get(customerId);
         existingCustomer.setCustomerName(customer.getCustomerName());
         existingCustomer.setVersion(customer.getVersion());
