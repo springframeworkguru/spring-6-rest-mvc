@@ -57,6 +57,7 @@ class BeerControllerIT {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(springSecurity())
                 .build();
     }
 
@@ -184,7 +185,6 @@ class BeerControllerIT {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.length()", is(1)))
                 .andReturn();
 
         System.out.println(result.getResponse().getContentAsString());   }

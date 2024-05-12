@@ -40,7 +40,9 @@ public class BeerControllerRestAssuredTest {
     public static class TestConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-            http.authorizeHttpRequests().anyRequest().permitAll();
+            http.authorizeHttpRequests(authorize -> {
+                authorize.anyRequest().permitAll();
+            });
 
             return http.build();
         }
