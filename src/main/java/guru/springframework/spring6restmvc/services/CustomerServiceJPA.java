@@ -5,6 +5,7 @@ import guru.springframework.spring6restmvc.model.CustomerDTO;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceJPA implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final CacheManager cacheManager;
 
     @Cacheable(cacheNames = "customerCache")
     @Override
@@ -48,12 +50,18 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public CustomerDTO saveNewCustomer(CustomerDTO customer) {
+        if (cacheManager.getCache("customerListCache") != null){
+            cacheManager.getCache("customerListCache").clear();
+        }
+
         return customerMapper.customerToCustomerDto(customerRepository
                 .save(customerMapper.customerDtoToCustomer(customer)));
     }
 
     @Override
     public Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer) {
+        clearCache(customerId);
+
         AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
 
         customerRepository.findById(customerId).ifPresentOrElse(foundCustomer -> {
@@ -67,8 +75,20 @@ public class CustomerServiceJPA implements CustomerService {
         return atomicReference.get();
     }
 
+    private void clearCache(UUID customerId) {
+        if (cacheManager.getCache("customerListCache") != null){
+            cacheManager.getCache("customerListCache").clear();
+        }
+        if (cacheManager.getCache("customerCache") != null){
+            cacheManager.getCache("customerCache").evict(customerId);
+        }
+    }
+
     @Override
     public Boolean deleteCustomerById(UUID customerId) {
+
+        clearCache(customerId);
+
         if(customerRepository.existsById(customerId)){
             customerRepository.deleteById(customerId);
             return true;
@@ -78,6 +98,9 @@ public class CustomerServiceJPA implements CustomerService {
 
     @Override
     public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer) {
+
+        clearCache(customerId);
+
         AtomicReference<Optional<CustomerDTO>> atomicReference = new AtomicReference<>();
 
         customerRepository.findById(customerId).ifPresentOrElse(foundCustomer -> {
