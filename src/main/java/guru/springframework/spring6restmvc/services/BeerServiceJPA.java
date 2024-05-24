@@ -126,9 +126,6 @@ public class BeerServiceJPA implements BeerService {
 
         val savedBeer = beerRepository.save(beerMapper.beerDtoToBeer(beer));
 
-        System.out.println("Current Thread Name: " + Thread.currentThread().getName());
-        System.out.println("Current Thread ID: " + Thread.currentThread().getId());
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         applicationEventPublisher.publishEvent(new BeerCreatedEvent(savedBeer, auth));
