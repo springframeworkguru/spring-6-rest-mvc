@@ -42,6 +42,7 @@ public class BeerAudit {
     @Column(length = 50)
     private String beerName;
 
+    @Column(columnDefinition = "smallint")
     private BeerStyle beerStyle;
 
     @Size(max = 255)
