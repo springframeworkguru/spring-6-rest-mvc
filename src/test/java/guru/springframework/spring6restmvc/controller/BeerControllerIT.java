@@ -57,6 +57,7 @@ class BeerControllerIT {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(springSecurity())
                 .build();
     }
 
@@ -241,7 +242,7 @@ class BeerControllerIT {
                 .beerName("New Beer")
                 .build();
 
-        ResponseEntity responseEntity = beerController.postBeer(beerDTO);
+        ResponseEntity responseEntity = beerController.handlePost(beerDTO);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
