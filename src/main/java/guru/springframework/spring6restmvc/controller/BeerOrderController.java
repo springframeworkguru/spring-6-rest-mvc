@@ -1,10 +1,10 @@
 package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.entities.BeerOrder;
-import guru.springframework.spring6restmvc.model.BeerOrderCreateDTO;
-import guru.springframework.spring6restmvc.model.BeerOrderDTO;
-import guru.springframework.spring6restmvc.model.BeerOrderUpdateDTO;
 import guru.springframework.spring6restmvc.services.BeerOrderService;
+import guru.springframework.spring6restmvcapi.model.BeerOrderCreateDTO;
+import guru.springframework.spring6restmvcapi.model.BeerOrderDTO;
+import guru.springframework.spring6restmvcapi.model.BeerOrderUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.UUID;
+
+;
 
 /**
  * Created by jt, Spring Framework Guru.

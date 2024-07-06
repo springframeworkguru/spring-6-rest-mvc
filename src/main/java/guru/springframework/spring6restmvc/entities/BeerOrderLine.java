@@ -16,11 +16,14 @@
  */
 package guru.springframework.spring6restmvc.entities;
 
-import guru.springframework.spring6restmvc.model.BeerOrderLineStatus;
+import guru.springframework.spring6restmvcapi.model.BeerOrderLineStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;

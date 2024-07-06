@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.CustomerDTO;
+
+import guru.springframework.spring6restmvcapi.model.CustomerDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
