@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.UUID;
 
 /**
  * Created by jt, Spring Framework Guru.
@@ -72,7 +71,6 @@ public class BootstrapData implements CommandLineRunner {
 
         if (customerRepository.count() == 0) {
             Customer customer1 = Customer.builder()
-                    .id(UUID.randomUUID())
                     .name("Customer 1")
                     .version(1)
                     .createdDate(LocalDateTime.now())
@@ -80,7 +78,6 @@ public class BootstrapData implements CommandLineRunner {
                     .build();
 
             Customer customer2 = Customer.builder()
-                    .id(UUID.randomUUID())
                     .name("Customer 2")
                     .version(1)
                     .createdDate(LocalDateTime.now())
@@ -88,7 +85,6 @@ public class BootstrapData implements CommandLineRunner {
                     .build();
 
             Customer customer3 = Customer.builder()
-                    .id(UUID.randomUUID())
                     .name("Customer 3")
                     .version(1)
                     .createdDate(LocalDateTime.now())
