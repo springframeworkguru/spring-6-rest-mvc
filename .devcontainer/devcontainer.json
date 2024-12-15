@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "test": "./mvnw test",
+    "build": "./mvnw clean verify",
+    "launch": "mvn spring-boot:run"
+  }
+}
